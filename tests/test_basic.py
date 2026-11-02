@@ -22,16 +22,18 @@ def test_package_import():
 
 
 def test_jobspy_model_instantiation():
-    post = JobPost(
-        title="Senior Python Engineer",
-        company_name="Acme Corp",
-        job_url="https://example.com/jobs/123",
-        location=None,
-        job_type=[JobType.FULL_TIME],
-        is_remote=True,
-    )
+    company_field = "company" if "company" in JobPost.model_fields else "company_name"
+    kwargs = {
+        "title": "Senior Python Engineer",
+        "job_url": "https://example.com/jobs/123",
+        "location": None,
+        "job_type": [JobType.FULL_TIME],
+        "is_remote": True,
+        company_field: "Acme Corp",
+    }
+    post = JobPost(**kwargs)
     assert post.title == "Senior Python Engineer"
-    assert post.company_name == "Acme Corp"
+    assert getattr(post, company_field) == "Acme Corp"
     assert post.is_remote is True
 
 
